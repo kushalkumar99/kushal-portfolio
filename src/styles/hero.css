@@ -1,0 +1,968 @@
+/* ================================================================
+   HERO — EDITORIAL POSTER COMPOSITION
+
+   Desktop:
+   Fixed 1896:616 composition so typography, portrait and metadata
+   scale together with the approved Hero reference.
+
+   Mobile/tablet:
+   Recompose progressively while preserving the same visual hierarchy.
+   ================================================================ */
+
+.hero {
+  --hero-pad: var(--page-gutter);
+  --hero-rise: 18px;
+
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--bg);
+}
+
+.hero-stage {
+  position: relative;
+  container-type: inline-size;
+
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+
+  width: 100%;
+  max-width: 2000px;
+  margin-inline: auto;
+
+  padding: 26px var(--hero-pad) 0;
+}
+
+
+/* ================================================================
+   TYPOGRAPHY
+   ================================================================ */
+
+.hero-type {
+  display: block;
+
+  width: min(100%, 460px);
+  height: auto;
+
+  overflow: visible;
+
+  z-index: 4;
+}
+
+.hero-type--right {
+  margin-left: auto;
+  margin-bottom: clamp(32px, 7vw, 56px);
+}
+
+.hero-line {
+  fill: var(--text);
+
+  font-family: var(--font-poster);
+  font-weight: 400;
+  text-transform: uppercase;
+
+  animation-delay: calc(var(--i, 0) * 45ms + 35ms);
+
+  transform-box: fill-box;
+
+  will-change:
+    transform,
+    opacity,
+    clip-path;
+}
+
+.hero-line--ascend {
+  animation:
+    hero-ascend
+    420ms
+    cubic-bezier(0.16, 1, 0.3, 1)
+    both;
+}
+
+.hero-line--typewriter {
+  animation:
+    hero-typewriter
+    390ms
+    steps(6, end)
+    both;
+}
+
+.hero-line--fade {
+  animation:
+    hero-fade-in
+    320ms
+    ease-out
+    both;
+}
+
+.hero-line--block {
+  transform-origin: left center;
+
+  animation:
+    hero-block-in
+    380ms
+    cubic-bezier(0.16, 1, 0.3, 1)
+    both;
+}
+
+.hero-accent {
+  fill: var(--accent);
+}
+
+/* The softer editorial accent mirrors the serif italic used for
+   “Real ideas” in the About statement. */
+.hero-line--editorial {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 575;
+  text-transform: none;
+}
+
+
+/* ================================================================
+   PROFESSIONAL METADATA
+   ================================================================ */
+
+.hero-meta {
+  display: grid;
+  gap: 3px;
+
+  max-width: 24ch;
+  margin: 0;
+
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+
+  z-index: 5;
+}
+
+.hero-meta-role {
+  color: var(--text);
+  font-weight: var(--weight-bold);
+}
+
+.hero-meta-company {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.hero-meta-company:hover,
+.hero-meta-company:focus-visible {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+
+/* ================================================================
+   PORTRAIT
+   ================================================================ */
+
+.hero-portrait {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  margin: 0 calc(var(--hero-pad) * -1);
+
+  border-bottom: 1px solid var(--line);
+
+  z-index: 3;
+
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Animated Google Flow portrait */
+.hero-portrait-video {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  /* Hide the narrow encoding seam visible at the source video's right edge. */
+  clip-path: inset(0 2px 0 0);
+
+  object-fit: cover;
+  object-position: center center;
+
+  filter:
+    grayscale(1)
+    contrast(1.18)
+    brightness(0.94);
+
+  background: transparent;
+
+  border: 0;
+  outline: 0;
+
+  pointer-events: none;
+}
+
+
+/* ================================================================
+   HERO ENTRANCE / REPLAY ANIMATION
+
+   useInViewReplay() controls .is-in.
+
+   When the Hero leaves the viewport:
+   .is-armed:not(.is-in)
+
+   hides the animated typography.
+
+   When the Hero returns:
+   .is-in
+
+   restarts the animations.
+   ================================================================ */
+
+.hero.is-armed:not(.is-in) .hero-line {
+  animation: none;
+  opacity: 0;
+}
+
+
+/* ================================================================
+   KEYFRAMES
+   ================================================================ */
+
+@keyframes hero-ascend {
+  from {
+    opacity: 0;
+    transform: translateY(var(--hero-rise));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-typewriter {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hero-block-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8%);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+
+/* ================================================================
+   DESKTOP POSTER
+
+   The approved desktop composition uses the original 1896 × 616
+   aspect ratio.
+
+   Typography:
+   LEFT  → 7.7%
+   RIGHT → 60.02%
+
+   Portrait:
+   LEFT   → 27.96%
+   WIDTH  → 36.38%
+   BOTTOM → 0
+
+   The portrait receives the entire Hero height so the WebM video
+   cannot collapse to its native landscape height.
+   ================================================================ */
+
+@media (min-width: 960px) {
+
+  .hero-stage {
+    display: block;
+
+    aspect-ratio: 1896 / 616;
+
+    padding: 0;
+  }
+
+
+  /* -------------------------
+     Typography
+     ------------------------- */
+
+  .hero-type {
+    position: absolute;
+    margin: 0;
+  }
+
+  .hero-type--left {
+    left: 7.7cqw;
+    top: 3.32cqw;
+
+    width: 30.64cqw;
+  }
+
+  .hero-type--right {
+    left: 60.02cqw;
+    top: 13.08cqw;
+
+    width: 34.49cqw;
+
+    margin: 0;
+  }
+
+
+  /* -------------------------
+     Portrait container
+     ------------------------- */
+
+  .hero-portrait {
+    position: absolute;
+
+    left: 27.96cqw;
+    bottom: 0;
+
+    width: 36.38cqw;
+    height: 100%;
+
+    margin: 0;
+
+    border: 0;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    overflow: hidden;
+
+    z-index: 3;
+  }
+
+
+  /* -------------------------
+     Animated portrait
+     ------------------------- */
+
+  .hero-portrait-video {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    /*
+      The WebM may have a landscape/native aspect ratio.
+      The container itself now controls the Hero geometry.
+    */
+    object-fit: cover;
+
+    /*
+      Start centered.
+      If Google Flow places the face too high/low,
+      adjust only this value.
+    */
+    object-position: center center;
+
+    filter:
+      grayscale(1)
+      contrast(1.18)
+      brightness(0.94);
+
+    background: transparent;
+  }
+
+
+  /* -------------------------
+     Metadata
+     ------------------------- */
+
+  .hero-meta {
+    position: absolute;
+
+    top: 3.2cqw;
+    right: 5.6cqw;
+
+    max-width: none;
+
+    font-size: clamp(
+      10px,
+      0.82cqw,
+      17px
+    );
+
+    text-align: right;
+  }
+
+  .hero-meta-role,
+  .hero-meta-company {
+    justify-self: end;
+  }
+
+  .hero-meta-role {
+    max-width: 23ch;
+  }
+
+  .hero-meta-company {
+    max-width: 17ch;
+  }
+}
+
+
+/* ================================================================
+   LIVING TECHNICAL BACKGROUND
+   ================================================================ */
+
+.hero-technical-bg {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 0;
+
+  pointer-events: none;
+
+  overflow: hidden;
+
+  /*
+    Visible enough to notice,
+    but still subordinate to the portrait and typography.
+  */
+  opacity: 0.85;
+}
+
+.hero-tech-svg {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: visible;
+}
+
+
+/* -------------------------
+   Engineering paths
+   ------------------------- */
+
+.hero-tech-lines {
+  fill: none;
+
+  stroke: #171717;
+
+  stroke-width: 1;
+
+  /*
+    Very subtle editorial technical lines.
+  */
+  opacity: 0.11;
+}
+
+
+/* -------------------------
+   Technical nodes
+   ------------------------- */
+
+.hero-tech-nodes {
+  fill: #171717;
+
+  opacity: 0.16;
+}
+
+
+/* -------------------------
+   Moving cobalt signals
+   ------------------------- */
+
+.hero-tech-signal {
+  fill: none;
+
+  stroke: #315BEF;
+
+  stroke-width: 1.5;
+
+  stroke-linecap: round;
+
+  stroke-dasharray: 3 180;
+
+  opacity: 0.48;
+
+  filter: none;
+}
+
+.hero-tech-signal-one {
+  animation:
+    hero-tech-flow-one
+    9s
+    linear
+    infinite;
+}
+
+.hero-tech-signal-two {
+  animation:
+    hero-tech-flow-two
+    12s
+    linear
+    infinite;
+}
+
+
+/* -------------------------
+   Technical labels
+   ------------------------- */
+
+.hero-tech-label {
+  position: absolute;
+
+  font-family: var(--font-mono);
+
+  font-size: 9px;
+
+  line-height: 1;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+
+  color: #171717;
+
+  opacity: 0.18;
+
+  white-space: nowrap;
+}
+
+.hero-tech-label-one {
+  top: 22%;
+  left: 4%;
+}
+
+.hero-tech-label-two {
+  bottom: 18%;
+  left: 31%;
+}
+
+.hero-tech-label-three {
+  top: 30%;
+  right: 4%;
+}
+
+
+/* ================================================================
+   TECHNICAL BACKGROUND ANIMATION
+   ================================================================ */
+
+@keyframes hero-tech-flow-one {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -360;
+  }
+}
+
+@keyframes hero-tech-flow-two {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -420;
+  }
+}
+
+
+/* ================================================================
+   Z-INDEX STACK
+
+   Background
+       ↓
+   Portrait
+       ↓
+   Typography
+       ↓
+   Metadata
+   ================================================================ */
+
+.hero-technical-bg {
+  z-index: 0;
+}
+
+.hero-portrait {
+  z-index: 3;
+}
+
+.hero-type {
+  z-index: 4;
+}
+
+.hero-meta {
+  z-index: 5;
+}
+
+
+/* ================================================================
+   TABLET
+   ================================================================ */
+
+@media (max-width: 959px) {
+
+  .hero {
+    --hero-rise: 12px;
+  }
+
+  .hero-stage {
+    min-height: 720px;
+
+    padding:
+      32px
+      var(--hero-pad)
+      0;
+  }
+
+  .hero-type {
+    width: min(70vw, 520px);
+  }
+
+  .hero-type--right {
+    align-self: flex-end;
+
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+
+  .hero-portrait {
+    width: min(70vw, 520px);
+
+    margin-inline: auto;
+
+    border-bottom: 0;
+  }
+
+  .hero-portrait-video {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .hero-meta {
+    margin-left: auto;
+
+    text-align: right;
+  }
+}
+
+/* TABLET: preserve the poster identity without the desktop's wide canvas. */
+@media (min-width: 768px) and (max-width: 959px) {
+  .hero-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "meta meta"
+      "left portrait"
+      "right portrait";
+    column-gap: clamp(18px, 3vw, 32px);
+    min-height: clamp(560px, 74vw, 660px);
+    padding: 28px var(--hero-pad) 32px;
+  }
+
+  .hero-meta {
+    grid-area: meta;
+    width: max-content;
+    margin: 0 0 18px auto;
+  }
+
+  .hero-type {
+    width: 100%;
+  }
+
+  .hero-type--left {
+    grid-area: left;
+    align-self: end;
+  }
+
+  .hero-portrait {
+    grid-area: portrait;
+    grid-row: 2 / 4;
+    width: 100%;
+    height: 100%;
+    min-height: 360px;
+    margin: 0;
+    border: 0;
+  }
+
+  .hero-portrait-video {
+    object-fit: contain;
+    object-position: center bottom;
+  }
+
+  .hero-type--right {
+    grid-area: right;
+    align-self: start;
+    margin: 0;
+  }
+}
+
+
+/* ================================================================
+   MOBILE
+   ================================================================ */
+
+@media (max-width: 767px) {
+
+  .hero {
+    --hero-rise: 12px;
+  }
+
+  .hero-stage {
+    display: flex;
+
+    min-height: 0;
+
+    aspect-ratio: auto;
+
+    gap: 0;
+
+    padding:
+      28px
+      var(--hero-pad)
+      0;
+  }
+
+  /*
+    Keep the technical background present,
+    but make it quieter on small screens.
+  */
+
+  .hero-technical-bg {
+    opacity: 0.55;
+  }
+
+  .hero-tech-lines {
+    opacity: 0.08;
+  }
+
+  .hero-tech-nodes {
+    opacity: 0.12;
+  }
+
+  .hero-tech-signal {
+    opacity: 0.32;
+  }
+
+
+  /* -------------------------
+     Typography
+     ------------------------- */
+
+  .hero-type {
+    position: relative;
+
+    width: 100%;
+
+    margin: 0;
+  }
+
+  .hero-type--left {
+    order: 1;
+  }
+
+  .hero-type--right {
+    order: 3;
+
+    margin: 20px 0 0;
+
+    align-self: stretch;
+  }
+
+
+  /* -------------------------
+     Portrait
+     ------------------------- */
+
+  .hero-portrait {
+    order: 2;
+
+    position: relative;
+
+    width: 100%;
+
+    height: min(72vw, 460px);
+
+    margin:
+      10px
+      calc(var(--hero-pad) * -1)
+      0;
+
+    border-bottom: 1px solid var(--line);
+
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: center;
+
+    overflow: hidden;
+
+    z-index: 3;
+  }
+
+  .hero-portrait-video {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center center;
+  }
+
+
+  /* -------------------------
+     Metadata
+     ------------------------- */
+
+  .hero-meta {
+    position: relative;
+
+    order: 4;
+
+    margin-top: 20px;
+
+    max-width: 100%;
+
+    text-align: right;
+  }
+
+
+  /* -------------------------
+     Technical labels
+     ------------------------- */
+
+  .hero-tech-label {
+    font-size: 8px;
+  }
+
+  .hero-tech-label-one {
+    top: 16%;
+    left: 4%;
+  }
+
+  .hero-tech-label-two {
+    bottom: 20%;
+    left: 8%;
+  }
+
+  .hero-tech-label-three {
+    top: 34%;
+    right: 4%;
+  }
+}
+
+
+/* ================================================================
+   SMALL MOBILE
+   ================================================================ */
+
+@media (max-width: 480px) {
+
+  .hero-stage {
+    padding:
+      22px
+      18px
+      0;
+  }
+
+  .hero-technical-bg {
+    opacity: 0.45;
+  }
+
+  .hero-portrait {
+    height: 76vw;
+
+    min-height: 260px;
+    max-height: 380px;
+  }
+
+  .hero-portrait-video {
+    object-position: center center;
+  }
+
+  .hero-meta {
+    font-size: 10px;
+
+    letter-spacing: 0.065em;
+  }
+
+  .hero-tech-label {
+    display: none;
+  }
+}
+
+
+/* ================================================================
+   PRINT
+   ================================================================ */
+
+@media print {
+
+  .hero.is-armed:not(.is-in) .hero-line {
+    opacity: 1;
+  }
+
+  .hero-technical-bg {
+    display: none;
+  }
+
+  .hero-portrait-video {
+    display: none;
+  }
+}
+
+
+/* ================================================================
+   REDUCED MOTION
+
+   Only decorative and entrance motion stop. The port1 video remains
+   visible because it is the hero's sole portrait media.
+   ================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .hero-line {
+    animation: none !important;
+
+    opacity: 1 !important;
+
+    transform: none !important;
+
+    clip-path: none !important;
+  }
+
+  .hero-tech-signal-one,
+  .hero-tech-signal-two {
+    animation: none !important;
+  }
+
+}

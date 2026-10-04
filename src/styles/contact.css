@@ -1,0 +1,331 @@
+/* =========================================
+   CONTACT / GET IN TOUCH
+   The closing statement. Dark field, asymmetric composition,
+   height driven by content (no min-height).
+========================================= */
+
+.contact-section {
+  --contact-pad-x: var(--page-gutter);
+  --contact-orbit: clamp(480px, 56vw, 820px);
+
+  position: relative;
+  overflow: hidden;
+  background: var(--dark);
+  color: var(--dark-text);
+}
+
+.kinetic-grid {
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.kinetic-grid-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.kinetic-grid-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ARC: decorative, very low contrast, never animated after entrance */
+
+.contact-orbit {
+  position: absolute;
+  z-index: 0;
+  left: 5%;
+  top: calc(var(--contact-orbit) * -0.66);
+  width: var(--contact-orbit);
+  height: var(--contact-orbit);
+  border: 1px solid rgba(245, 245, 242, 0.14);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 1200ms var(--ease-out) 200ms;
+}
+
+.contact-section.is-armed:not(.is-in) .contact-orbit {
+  opacity: 0;
+  transition: none;
+}
+
+/* CONTENT */
+
+.contact-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(var(--space-6), 4vw, var(--space-7)) var(--contact-pad-x) var(--space-5);
+}
+
+/* LABEL */
+
+.contact-label {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  color: rgba(245, 245, 242, 0.7);
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--tracking-label);
+}
+
+.contact-label span {
+  color: var(--accent);
+  font-weight: var(--weight-bold);
+}
+
+.contact-label strong {
+  font-size: var(--type-micro);
+  font-weight: var(--weight-medium);
+}
+
+/* MAIN: statement left, supporting copy + CTA right */
+
+.contact-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.6fr);
+  align-items: end;
+  gap: var(--space-8);
+  padding-block: clamp(32px, 4.5vw, 64px) clamp(36px, 4vw, 56px);
+}
+
+.contact-heading h2 {
+  margin: 0;
+  color: var(--dark-text);
+  font-size: var(--type-closing);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.contact-side {
+  max-width: 320px;
+  padding-bottom: 8px;
+}
+
+.contact-side p {
+  margin: 0;
+  max-width: 32ch;
+  color: rgba(245, 245, 242, 0.72);
+  font-size: var(--type-body);
+  line-height: var(--leading-body);
+}
+
+/* CTA */
+
+.contact-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: var(--space-5);
+  padding: var(--space-1) var(--space-2) var(--space-1) 0;
+  color: var(--dark-text);
+  font-family: var(--font-display);
+  font-size: var(--type-micro);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--tracking-label);
+}
+
+.contact-cta span {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(245, 245, 242, 0.75);
+  border-radius: 50%;
+  font-size: 16px;
+  transition:
+    background 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    transform 240ms var(--ease-out);
+}
+
+.contact-cta strong {
+  transition: transform 240ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-cta:hover span {
+    border-color: var(--dark-text);
+    background: var(--dark-text);
+    color: var(--dark);
+    transform: translate(2px, -2px);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-cta:hover strong {
+    transform: translateX(2px);
+  }
+}
+
+.contact-cta:focus-visible,
+.contact-social:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+/* BOTTOM */
+
+.contact-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(245, 245, 242, 0.16);
+}
+
+.copyright {
+  color: rgba(245, 245, 242, 0.6);
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--tracking-meta);
+}
+
+.contact-socials {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-social {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(245, 245, 242, 0.4);
+  border-radius: 50%;
+  color: var(--dark-text);
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  transition:
+    background 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    transform 220ms var(--ease-out);
+}
+
+.contact-social span {
+  display: block;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-social:hover {
+    border-color: var(--dark-text);
+    background: var(--dark-text);
+    color: var(--dark);
+    transform: translateY(-2px);
+  }
+}
+
+/* ENTRANCE: opacity + transform only, staggered through --d.
+   Replayable: .is-armed / .is-in come from useInViewReplay(). Visible by
+   default, so nothing stays hidden without JS or IntersectionObserver. */
+
+.contact-section [data-reveal] {
+  transition:
+    opacity 700ms var(--ease-out) var(--d, 0ms),
+    transform 700ms var(--ease-out) var(--d, 0ms);
+}
+
+.contact-section.is-armed:not(.is-in) [data-reveal] {
+  opacity: 0;
+  transform: translateY(var(--reveal-y));
+  transition: none;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .contact-main {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.7fr);
+    gap: var(--space-6);
+  }
+
+}
+
+/* STACK */
+
+@media (max-width: 680px) {
+  .contact-main {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    padding-block: var(--space-7) 40px;
+  }
+
+  .contact-heading h2 {
+    font-size: clamp(2.6rem, 11vw, 3.5rem);
+  }
+
+  .contact-side {
+    max-width: 340px;
+    padding-bottom: 0;
+  }
+
+  .contact-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .contact-social {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* REDUCED MOTION: everything visible and static */
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-section [data-reveal],
+  .contact-section.is-armed:not(.is-in) [data-reveal],
+  .contact-section.is-armed:not(.is-in) .contact-orbit,
+  .contact-orbit {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .contact-cta span,
+  .contact-cta strong,
+  .contact-social {
+    transition: none;
+  }
+
+  .contact-cta:hover span,
+  .contact-cta:hover strong,
+  .contact-social:hover {
+    transform: none;
+  }
+}
+
+@media print {
+  .contact-section.is-armed:not(.is-in) [data-reveal],
+  .contact-section.is-armed:not(.is-in) .contact-orbit {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.contact-social:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-social:active {
+    transform: none;
+  }
+}

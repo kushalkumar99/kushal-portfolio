@@ -1,0 +1,696 @@
+/* ================================================================
+   HOME / ABOUT — editorial statement + profile index
+   Reuses the global tokens (--bg, --text, --ink-soft, --muted, --line,
+   --accent, --font-display, --font-mono, --ease-out). Everything here is
+   scoped to .about-section.
+================================================================ */
+
+.about-section {
+  --about-gutter: var(--page-gutter);
+  --about-idx: 20px;
+  --about-gap: clamp(28px, 3.2vw, 48px);
+  /* Keeps the editorial statement subordinate to the section heading. */
+  --about-content-inset: clamp(24px, 4vw, 64px);
+  --about-statement-size: clamp(2.5rem, 1.5rem + 3.7vw, 4.75rem);
+
+  position: relative;
+  padding: var(--section-y) var(--about-gutter);
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 0;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.7fr)
+    minmax(0, 1fr);
+  grid-template-areas:
+    "head intro"
+    "main side";
+  column-gap: var(--about-gap);
+}
+
+/* Two stacks that start on the same line. Left: statement, then the copy
+   directly beneath it. Right: profile index, then the CTA. Together they
+   close at about the same depth, so no column is left with an empty tail. */
+.about-main,
+.about-side {
+  min-width: 0;
+  margin-top: clamp(var(--space-6), 3.4vw, var(--space-7));
+}
+
+.about-main {
+  grid-area: main;
+  margin-left: var(--about-content-inset);
+}
+
+.about-side {
+  grid-area: side;
+  display: flex;
+  flex-direction: column;
+}
+
+/* In the flex column the index fills the width; the grid layouts below
+   put it back to start. */
+.about-side .about-facts {
+  align-self: stretch;
+}
+
+/* -----------------------------------------
+   Heading row
+----------------------------------------- */
+
+.about-index {
+  grid-area: idx;
+  align-self: start;
+  padding-top: 0.95em;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--tracking-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.about-head {
+  grid-area: head;
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  min-width: 0;
+}
+
+.about-title {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: var(--type-section);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+}
+
+/* Typewriter. Characters keep their space (opacity only), so typing never
+   shifts layout. A cobalt caret rides each new character, then the last one
+   blinks and fades. All of it is CSS; the hook only toggles .is-in. */
+
+.about-title {
+  --type-start: 80ms;
+  --type-step: 100ms;
+}
+
+.about-char {
+  position: relative;
+}
+
+.about-char--accent {
+  color: var(--accent);
+}
+
+.about-char::after {
+  position: absolute;
+  top: 0.12em;
+  bottom: 0.1em;
+  left: calc(100% + 0.03em);
+  width: 0.07em;
+  background: var(--accent);
+  content: "";
+  opacity: 0;
+}
+
+.about-arrow {
+  display: grid;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  margin-bottom: 4px;
+  border: 1px solid var(--text);
+  border-radius: 50%;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1;
+  transition:
+    background 200ms var(--ease-out),
+    color 200ms var(--ease-out),
+    transform 200ms var(--ease-out);
+}
+
+.about-arrow:focus-visible {
+  outline-offset: 5px;
+}
+
+.about-intro {
+  grid-area: intro;
+  align-self: end;
+  max-width: 36ch;
+  margin: 0;
+  padding-bottom: 2px;
+  color: var(--ink-soft);
+  font-size: var(--type-body);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-normal);
+  text-wrap: pretty;
+}
+
+.about-intro em {
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-size: 1.09em;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* -----------------------------------------
+   Statement — the section's thesis
+----------------------------------------- */
+
+.about-statement {
+  grid-area: stmt;
+  min-width: 0;
+  container-type: inline-size;
+  scroll-margin-top: 24px;
+}
+
+.about-statement-title {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: min(var(--about-statement-size), 11cqw);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+}
+
+.about-line {
+  display: block;
+  white-space: nowrap;
+}
+
+/* Word-by-word shift. The wrapper is a clipping window (clip-path, not
+   overflow, so the baseline never moves); the word inside slides up into it. */
+.about-word {
+  display: inline-block;
+  clip-path: inset(-0.2em -0.15em -0.08em -0.15em);
+}
+
+.about-word-text {
+  display: inline-block;
+}
+
+/* The middle line recedes so the first and last words carry the sentence. */
+.about-line--soft {
+  color: var(--muted);
+}
+
+/* The editorial italic contrasts the geometric display face without
+   introducing a casual handwritten style. */
+.about-word-text--editorial {
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-size: 1.12em;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  text-transform: none;
+}
+
+.about-word-text--impact {
+  position: relative;
+}
+
+.about-word-text--impact::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.13em;
+  left: 0;
+  height: 0.08em;
+  background: var(--accent);
+  content: "";
+}
+
+/* -----------------------------------------
+   Copy
+----------------------------------------- */
+
+.about-copy {
+  grid-area: copy;
+  min-width: 0;
+  max-width: 52ch;
+  margin-top: var(--space-6);
+}
+
+.about-copy p {
+  margin: 0 0 var(--space-4);
+  color: color-mix(in srgb, var(--text) 78%, var(--bg));
+  font-size: var(--type-body);
+  line-height: var(--leading-body);
+  text-wrap: pretty;
+}
+
+.about-copy .about-lead {
+  margin-bottom: var(--space-5);
+  color: var(--text);
+  font-size: var(--type-lead);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-normal);
+}
+
+.about-lead strong {
+  font-weight: var(--weight-bold);
+}
+
+/* -----------------------------------------
+   Profile index
+----------------------------------------- */
+
+.about-facts {
+  grid-area: facts;
+  align-self: start;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-fact {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--line);
+}
+
+/* The closing rule belongs to the last row, so it reveals with it. */
+.about-fact:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+/* A cobalt hairline draws across the row's rule on hover. */
+.about-fact::before {
+  position: absolute;
+  inset: -1px 0 auto 0;
+  height: 1px;
+  background: var(--accent);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 420ms var(--ease-out);
+}
+
+.about-fact-mark {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--tracking-label);
+  font-variant-numeric: tabular-nums;
+  transition:
+    color 200ms var(--ease-out),
+    transform 260ms var(--ease-out);
+}
+
+.about-fact-body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.about-fact-title {
+  color: var(--text);
+  font-size: var(--type-body);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-normal);
+}
+
+.about-fact-meta {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--tracking-meta);
+}
+
+/* -----------------------------------------
+   CTA — mirrors the Hero's circular-arrow pattern
+----------------------------------------- */
+
+.about-cta {
+  grid-area: cta;
+  align-self: start;
+  margin-top: var(--space-5);
+}
+
+.about-more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 48px;
+  border-radius: 999px;
+}
+
+.about-more:focus-visible {
+  outline-offset: 6px;
+}
+
+.about-more-arrow {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid var(--text);
+  border-radius: 50%;
+  color: var(--text);
+  font-size: 15px;
+  transition:
+    background 200ms var(--ease-out),
+    color 200ms var(--ease-out),
+    transform 200ms var(--ease-out);
+}
+
+.about-more-label {
+  position: relative;
+  padding-bottom: 3px;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: var(--type-micro);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.about-more-label::after {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 260ms var(--ease-out);
+}
+
+/* -----------------------------------------
+   Hover / focus (pointer devices only for hover)
+----------------------------------------- */
+
+.about-arrow:focus-visible,
+.about-more:focus-visible .about-more-arrow {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.about-more:focus-visible .about-more-arrow {
+  transform: translate(3px, -3px);
+}
+
+.about-more:focus-visible .about-more-label::after {
+  transform: scaleX(1);
+}
+
+@media (hover: hover) {
+  .about-arrow:hover {
+    background: var(--text);
+    color: var(--bg);
+    transform: translate(2px, -2px);
+  }
+
+  .about-more:hover .about-more-arrow {
+    background: var(--text);
+    color: var(--bg);
+    transform: translate(3px, -3px);
+  }
+
+  .about-more:hover .about-more-label::after {
+    transform: scaleX(1);
+  }
+
+  .about-fact:hover::before {
+    transform: scaleX(1);
+  }
+
+  .about-fact:hover .about-fact-mark {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
+}
+
+/* -----------------------------------------
+   Entrance — content is visible unless JS arms the section.
+   .is-armed (hidden start) and .is-in (final) come from useInViewReplay;
+   leaving the viewport resets instantly so every re-entry starts clean.
+----------------------------------------- */
+
+.about-section [data-reveal] {
+  transition:
+    opacity 640ms var(--ease-out) var(--d, 0ms),
+    transform 720ms var(--ease-out) var(--d, 0ms);
+}
+
+.about-section.is-armed [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.about-section.is-armed:not(.is-in) [data-reveal] {
+  transition: none;
+}
+
+.about-section.is-armed.is-in [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Heading: typewriter. Each character switches on, one step apart. */
+.about-section.is-armed .about-char {
+  opacity: 0;
+}
+
+.about-section.is-armed.is-in .about-char {
+  opacity: 1;
+  transition: opacity 1ms linear
+    calc(var(--type-start) + var(--i, 0) * var(--type-step));
+}
+
+.about-section.is-armed.is-in .about-char::after {
+  animation: about-caret var(--type-step) steps(1, end)
+    calc(var(--type-start) + var(--i, 0) * var(--type-step)) forwards;
+}
+
+.about-section.is-armed.is-in .about-char:last-child::after {
+  animation: about-caret-end 1100ms steps(1, end)
+    calc(var(--type-start) + var(--i, 0) * var(--type-step)) infinite;
+}
+
+@keyframes about-caret {
+  0%,
+  99.9% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes about-caret-end {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Statement: shift word by word. Words rise from below their clipping
+   window in order; --w is the word's position in the sentence. */
+.about-section.is-armed .about-word-text {
+  opacity: 0;
+  transform: translateY(115%);
+}
+
+.about-section.is-armed.is-in .about-word-text {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 420ms var(--ease-out) calc(360ms + var(--w, 0) * 90ms),
+    transform 780ms var(--ease-out) calc(360ms + var(--w, 0) * 90ms);
+}
+
+/* -----------------------------------------
+   Tablet — statement takes the full measure
+----------------------------------------- */
+
+@media (max-width: 1024px) {
+  /* The two desktop stacks dissolve; their children return to the grid. */
+  .about-main,
+  .about-side {
+    display: contents;
+  }
+
+  .about-side .about-facts {
+    align-self: start;
+  }
+
+  .about-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "head  intro"
+      "stmt  stmt"
+      "copy  facts"
+      "cta   facts";
+  }
+
+  .about-statement {
+    margin-top: var(--space-6);
+    margin-left: var(--about-content-inset);
+  }
+
+  .about-statement-title {
+    font-size: var(--about-statement-size);
+  }
+
+  .about-copy,
+  .about-facts {
+    margin-top: var(--space-6);
+  }
+
+  .about-copy {
+    max-width: 38ch;
+    margin-left: var(--about-content-inset);
+  }
+
+  .about-cta {
+    margin-top: var(--space-3);
+  }
+}
+
+/* -----------------------------------------
+   Mobile — single deliberate column
+----------------------------------------- */
+
+@media (max-width: 720px) {
+  .about-head {
+    align-items: center;
+  }
+
+  .about-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "head"
+      "intro"
+      "stmt"
+      "copy"
+      "facts"
+      "cta";
+    column-gap: 14px;
+  }
+
+  .about-index {
+    padding-top: 0.6em;
+  }
+
+  .about-arrow {
+    margin-bottom: 0;
+  }
+
+  .about-intro {
+    max-width: 34ch;
+    margin-top: var(--space-5);
+  }
+
+  .about-statement {
+    margin-top: var(--space-6);
+    margin-left: 0;
+  }
+
+  .about-statement-title {
+    font-size: clamp(2.6rem, 12.1cqw, var(--type-display));
+  }
+
+  .about-copy {
+    max-width: 44ch;
+    margin-top: var(--space-6);
+    margin-left: 0;
+    padding-top: 0;
+  }
+
+  .about-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+
+  .about-fact {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-2);
+  }
+
+  .about-fact:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .about-fact-mark {
+    padding-top: 3px;
+  }
+
+  .about-cta {
+    margin-top: var(--space-5);
+  }
+}
+
+/* -----------------------------------------
+   Reduced motion — no reveal, no transforms; hover/focus colour stays
+----------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .about-section [data-reveal],
+  .about-char,
+  .about-word-text {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .about-char::after {
+    display: none;
+  }
+
+  .about-arrow:hover,
+  .about-more:hover .about-more-arrow,
+  .about-more:focus-visible .about-more-arrow,
+  .about-fact:hover .about-fact-mark {
+    transform: none;
+  }
+
+  .about-fact::before,
+  .about-more-label::after {
+    transition: none;
+  }
+}
+
+@media print {
+  .about-section [data-reveal],
+  .about-char,
+  .about-word-text {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .about-char::after {
+    display: none;
+  }
+}

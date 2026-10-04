@@ -1,0 +1,352 @@
+/* =========================================
+   TECH STACK
+   Continuous left-to-right ticker. CSS-only: one transform animation,
+   no JS timers, no state updates.
+========================================= */
+
+.tech-stack-section {
+  --tech-gap: 32px;
+  --tech-pad-x: var(--page-gutter);
+  --tech-pad-y: var(--space-5);
+  --tech-speed: 40s; /* time for one full list to travel past */
+
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--space-4);
+  padding: var(--tech-pad-y) var(--tech-pad-x);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+/* LABELS */
+
+.tech-stack-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.tech-stack-label > span {
+  padding-top: 10px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--tracking-meta);
+}
+
+/* Match the primary section-heading scale used by About and Featured Work. */
+.tech-stack-label h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-section);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+}
+
+.tech-stack-typewriter-char {
+  position: relative;
+}
+
+.tech-stack-typewriter-char::after {
+  position: absolute;
+  top: 0.12em;
+  bottom: 0.1em;
+  left: calc(100% + 0.03em);
+  width: 0.07em;
+  background: var(--accent);
+  content: "";
+  opacity: 0;
+}
+
+.tech-stack-section.is-armed .tech-stack-typewriter-char {
+  opacity: 0;
+}
+
+.tech-stack-section.is-armed.is-in .tech-stack-typewriter-char {
+  opacity: 1;
+  transition: opacity 1ms linear calc(80ms + var(--i, 0) * 55ms);
+}
+
+.tech-stack-section.is-armed.is-in .tech-stack-typewriter-char::after {
+  animation: tech-stack-caret 55ms steps(1, end) calc(80ms + var(--i, 0) * 55ms) forwards;
+}
+
+.tech-stack-section.is-armed.is-in .tech-stack-typewriter-char:last-child::after {
+  animation: tech-stack-caret-end 1100ms steps(1, end) calc(80ms + var(--i, 0) * 55ms) infinite;
+}
+
+@keyframes tech-stack-caret {
+  0%, 99.9% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes tech-stack-caret-end {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.tech-stack-tools {
+  position: absolute;
+  /* keeps the original offset from the section's top padding */
+  top: calc(var(--tech-pad-y) - 10px);
+  right: var(--tech-pad-x);
+}
+
+.tech-stack-tools span {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--tracking-label);
+}
+
+/* MARQUEE VIEWPORT: clips the moving track so the page never scrolls */
+
+.tech-stack-marquee {
+  min-width: 0;
+  margin-top: 0;
+  padding-block: 8px; /* room for the hover lift */
+  overflow: hidden;
+
+  /* very subtle edge fade, matched to the ivory background */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 28px,
+    #000 calc(100% - 28px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 28px,
+    #000 calc(100% - 28px),
+    transparent 100%
+  );
+}
+
+/* TRACK: N identical groups, moves one group per cycle.
+   -25% -> 0 translates to the RIGHT (left-to-right travel). */
+
+.tech-stack-track {
+  display: flex;
+  width: max-content;
+  animation: tech-marquee var(--tech-speed) linear infinite;
+  will-change: transform;
+}
+
+.tech-stack-group {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--tech-gap);
+  margin: 0;
+  /* trailing gap keeps Git -> Python spacing identical to every other pair */
+  padding: 0 var(--tech-gap) 0 0;
+  list-style: none;
+}
+
+@keyframes tech-marquee {
+  from {
+    transform: translate3d(-25%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* pause for inspection (pointer or keyboard focus) */
+@media (hover: hover) {
+  .tech-stack-marquee:hover .tech-stack-track {
+    animation-play-state: paused;
+  }
+}
+
+.tech-stack-marquee:focus-within .tech-stack-track {
+  animation-play-state: paused;
+}
+
+/* ITEM */
+
+.tech-item {
+  min-width: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-micro);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-meta);
+  letter-spacing: var(--tracking-meta);
+  white-space: nowrap;
+  transition:
+    transform 180ms var(--ease-out),
+    color 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tech-item:hover {
+    color: var(--text);
+    transform: translateY(-3px);
+  }
+}
+
+/* ICON */
+
+.tech-icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  color: #111;
+}
+
+/* INDIVIDUAL ICON TREATMENTS (unchanged) */
+
+.tech-icon.python {
+  color: #1769aa;
+  background: #f0f0ec;
+}
+
+.tech-icon.javascript {
+  background: #f0df25;
+  color: #111;
+}
+
+.tech-icon.typescript {
+  background: #3178c6;
+  color: white;
+}
+
+.tech-icon.react {
+  color: #159bd3;
+  background: #eef8fb;
+}
+
+.tech-icon.nextjs {
+  background: #111;
+  color: white;
+}
+
+.tech-icon.flutter {
+  color: #168eea;
+  background: #edf7ff;
+}
+
+.tech-icon.node {
+  color: #398b3c;
+  background: #e8f4e7;
+}
+
+.tech-icon.supabase {
+  color: #27a66f;
+  background: #e8f8ef;
+}
+
+.tech-icon.postgresql {
+  color: #336791;
+  background: #edf3f8;
+}
+
+.tech-icon.mysql {
+  color: #236a92;
+  background: #edf4f7;
+}
+
+.tech-icon.tensorflow {
+  color: #e87722;
+  background: #fff3e9;
+}
+
+.tech-icon.pytorch {
+  color: #c94931;
+  background: #fff0ec;
+}
+
+.tech-icon.docker {
+  color: #168bd2;
+  background: #edf8ff;
+}
+
+.tech-icon.aws {
+  color: #111;
+  background: #f0f0ed;
+}
+
+.tech-icon.git {
+  color: #e44c30;
+  background: #fff0ed;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tech-item:hover .tech-icon {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* TABLET / MOBILE: label above, ticker bleeds edge to edge */
+
+@media (max-width: 900px) {
+  .tech-stack-section {
+    --tech-gap: 28px;
+
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .tech-stack-tools {
+    top: calc(var(--tech-pad-y) + 3px);
+  }
+
+  .tech-stack-marquee {
+    margin: 0 calc(var(--tech-pad-x) * -1);
+  }
+}
+
+@media (max-width: 560px) {
+  .tech-stack-section {
+    --tech-gap: 24px;
+  }
+}
+
+/* REDUCED MOTION: no movement; every technology stays visible, wrapped */
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-stack-marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .tech-stack-track {
+    width: 100%;
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  .tech-stack-group {
+    flex-wrap: wrap;
+    padding-right: 0;
+    row-gap: 18px;
+  }
+
+  .tech-stack-group[aria-hidden="true"] {
+    display: none;
+  }
+
+  .tech-item,
+  .tech-item:hover {
+    transition: none;
+    transform: none;
+  }
+}

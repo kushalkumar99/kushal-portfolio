@@ -1,0 +1,8 @@
+/* Home page shell. Tokens live in globals.css. */
+.home {
+  background: var(--bg);
+}
+
+.home > section {
+  margin-block-start: 0;
+}

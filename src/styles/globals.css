@@ -1,0 +1,286 @@
+/* ================================================================
+   GLOBAL FOUNDATION
+   One token set for the whole site. Components must only reference
+   tokens defined here (or custom properties they define themselves).
+================================================================ */
+
+/* Self-hosted: no render-blocking third-party font CSS for these. */
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/geist-mono-400.woff") format("woff");
+  font-weight: 100 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/geist-mono-600.woff") format("woff");
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("/fonts/instrument-serif-italic.woff") format("woff");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --bg: #f3f2ee;
+  --surface: #e9e8e3;
+  --text: #171717;
+  --ink-soft: #242424;
+  --muted: #6b6b66; /* 4.9:1 on --bg (was 4.1:1) */
+  --line: #d8d7d2;
+
+  --accent: #315bef;
+
+  --dark: #090909;
+  --dark-text: #f5f5f2;
+
+  /* Satoshi (Fontshare) for UI, Anton (Google Fonts) for the poster hero. */
+  --font-display: "Satoshi", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Arial, sans-serif;
+  --font-poster: "Anton", Impact, "Haettenschweiler", "Arial Narrow Bold",
+    sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Consolas,
+    "Liberation Mono", monospace;
+  /* Editorial accent only (italic cut). Never for body, metadata or UI. */
+  --font-serif: "Instrument Serif", Georgia, serif;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  --nav-height: 68px;
+
+  /* Spacing scale: the default vocabulary for gaps, margins and padding. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 80px;
+  --space-10: 96px;
+
+  /* One horizontal page edge shared by every section. */
+  --page-gutter: clamp(20px, 4vw, 56px);
+
+  /* Vertical section rhythm. Desktop >= 1200, tablet 768-1199, mobile < 768.
+     --section-y: About, Work.  --section-y-tight: Experience. */
+  --section-y: 64px;
+  --section-y-tight: 56px;
+
+  /* Scroll reveal travel; smaller on phones (see media query below). */
+  --reveal-y: 20px;
+
+  /* ------------------------------------------------------------
+     TYPOGRAPHY SYSTEM
+     Satoshi          = human + engineering (headings, body, buttons)
+     Instrument Serif = editorial accent (a few italic phrases)
+     Geist Mono       = technical precision (eyebrows, dates, metadata)
+     Sizes are fluid; every step is a clamp() so there are no jumps.
+  ------------------------------------------------------------ */
+
+  /* Display */
+  /* Hero lettering is SVG scaled with its stage (hero.css), so this token
+     is the reference size rather than something applied to the SVG. */
+  --type-hero: clamp(3rem, 8.5vw, 7.25rem);
+  --type-display: clamp(2.6rem, 1.4rem + 4.4vw, 5.5rem); /* About statement */
+  --type-closing: clamp(2.6rem, 0.8rem + 5.6vw, 6.75rem); /* Contact */
+  --type-section: clamp(2.4rem, 1.6rem + 3.4vw, 4.5rem); /* Work, About */
+
+  /* Content */
+  --type-project: clamp(1.25rem, 1rem + 0.9vw, 1.75rem);
+  --type-lead: clamp(1rem, 0.9rem + 0.3vw, 1.125rem);
+  --type-body: 1rem;
+
+  /* Metadata */
+  --type-small: 0.8125rem;
+  --type-micro: 0.6875rem;
+
+  /* Weights (Satoshi ships 400/500/700/900) */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  /* Line height */
+  --leading-display: 0.95;
+  --leading-heading: 1.05;
+  --leading-tight: 1.15;
+  --leading-body: 1.55;
+  --leading-meta: 1.35;
+
+  /* Tracking */
+  --tracking-display: -0.04em; /* very large lettering only */
+  --tracking-tight: -0.03em;
+  --tracking-normal: 0;
+  --tracking-label: 0.08em;
+  --tracking-meta: 0.04em;
+}
+
+@media (max-width: 1199px) {
+  :root {
+    --section-y: 56px;
+    --section-y-tight: 48px;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --section-y: 48px;
+    --section-y-tight: 40px;
+    --reveal-y: 12px;
+  }
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+/* ================================================================
+   SCROLL REVEAL (replayable)
+   useInViewReplay() puts .is-armed on a section (JS + motion allowed)
+   and toggles .is-in while it is on screen. Items marked .reveal-item
+   sit at their start state whenever the section is armed but not in
+   view, and ease to rest when it enters. Leaving snaps back instantly
+   (transition: none) so the next entrance always starts clean.
+   Only opacity and transform change: no layout shift.
+================================================================ */
+
+.reveal-item {
+  transition:
+    opacity 700ms var(--ease-out) var(--d, 0ms),
+    transform 700ms var(--ease-out) var(--d, 0ms);
+}
+
+.is-armed:not(.is-in) .reveal-item {
+  opacity: 0;
+  transform: translateY(var(--reveal-y));
+  transition: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-height);
+  scrollbar-color: #b9b8b2 var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+
+  background: var(--bg);
+  color: var(--text);
+
+  font-family: var(--font-display);
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  caret-color: var(--accent);
+}
+
+body,
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+main {
+  width: 100%;
+  overflow-x: clip;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+/* Dark footer needs a focus ring that is visible on near-black. */
+.contact-section :focus-visible {
+  outline-color: var(--dark-text);
+}
+
+::selection {
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* Visually hidden, still read by screen readers and search engines. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Never leave content hidden waiting for an entrance. */
+  .is-armed:not(.is-in) .reveal-item {
+    opacity: 1;
+    transform: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .is-armed:not(.is-in) .reveal-item {
+    opacity: 1;
+    transform: none;
+  }
+}
