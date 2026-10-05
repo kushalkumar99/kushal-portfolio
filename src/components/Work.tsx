@@ -31,7 +31,7 @@ const categories: Category[] = [
     label: "PROFESSIONAL",
     projects: [
       {
-        id: "aeromed",
+        id: "ambulance-first",
         name: "AMBULANCE FIRST",
         type: "MEDICAL TRANSPORTATION PLATFORM",
         href: "https://github.com/kushalkumar99/AmbulanceFirst_app",
@@ -102,6 +102,10 @@ function FeaturedTitle() {
 }
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
+  /* Cards that only point at the GitHub profile say so, instead of implying a
+     project repository exists. */
+  const linksToProfile = project.href === GITHUB_URL;
+
   return (
     <article
       className="featured-project"
@@ -110,11 +114,20 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       <InteractiveProjectCard
         className="reveal-item"
         title={project.name}
-        type={project.type}
         imageUrl={project.imageUrl}
         imageAlt={project.imageAlt}
         href={project.href}
+        actionLabel={linksToProfile ? "View on GitHub" : "View project"}
       />
+
+      {/* Name and type as real text: readable without hover, searchable, and
+          announced by screen readers. Styles come from work.css. */}
+      <div className="featured-project-info reveal-item">
+        <div className="project-text">
+          <h3>{project.name}</h3>
+          <p className="project-type">{project.type}</p>
+        </div>
+      </div>
     </article>
   );
 }

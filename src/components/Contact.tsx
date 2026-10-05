@@ -9,12 +9,12 @@ const EMAIL = "kushalkumar21k@gmail.com";
 const contactLinks = [
   {
     label: "GitHub",
-    href: "https://github.com/Kushal2411",
+    href: "https://github.com/kushalkumar99",
     icon: <BrandIcon id="github" size={18} />,
   },
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/k-kushal-kumar/",
+    href: "https://www.linkedin.com/in/kushalkumar9921?utm_source=share_via&utm_content=profile&utm_medium=member_android",
     icon: <BrandIcon id="linkedin" size={17} />,
   },
   {

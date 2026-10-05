@@ -85,8 +85,8 @@
 }
 
 .featured-arrow {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
   display: grid;
   place-items: center;

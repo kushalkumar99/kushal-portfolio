@@ -5,10 +5,11 @@ import "../../styles/3d-card.css";
 
 export interface InteractiveProjectCardProps {
   title: string;
-  type: string;
+  type?: string;
   imageUrl: string;
   imageAlt: string;
   href: string;
+  actionLabel?: string;
   className?: string;
 }
 
@@ -17,7 +18,7 @@ export const InteractiveProjectCard = forwardRef<
   HTMLDivElement,
   InteractiveProjectCardProps
 >(function InteractiveProjectCard(
-  { title, type, imageUrl, imageAlt, href, className = "" },
+  { title, type, imageUrl, imageAlt, href, actionLabel = "View project", className = "" },
   ref,
 ) {
   const mouseX = useMotionValue(0);
@@ -56,7 +57,7 @@ export const InteractiveProjectCard = forwardRef<
         <div className="interactive-project-card-overlay" aria-hidden="true" />
         <div className="interactive-project-card-content">
           <div className="interactive-project-card-copy">
-            <span className="interactive-project-card-type">{type}</span>
+            {type && <span className="interactive-project-card-type">{type}</span>}
             <h3 className="interactive-project-card-title">{title}</h3>
           </div>
           <a
@@ -66,7 +67,7 @@ export const InteractiveProjectCard = forwardRef<
             className="interactive-project-card-action"
             aria-label={`View ${title} on GitHub (opens in a new tab)`}
           >
-            <span>VIEW PROJECT</span>
+            <span>{actionLabel}</span>
             <ArrowUpRight size={17} />
           </a>
         </div>
