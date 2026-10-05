@@ -667,6 +667,28 @@
   animation: hero-arc-ccw var(--arc-duration) var(--arc-delay) linear infinite;
 }
 
+.hero-tech-icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  filter: drop-shadow(0 0 4px rgb(49 91 239 / 35%));
+  will-change: opacity, transform;
+}
+
+.hero-tech-icon--forward {
+  animation: hero-icon-forward var(--icon-duration) var(--icon-delay) cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.hero-tech-icon--reverse {
+  animation: hero-icon-reverse var(--icon-duration) var(--icon-delay) cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
 .hero-tech-scan {
   fill: none;
   stroke: currentColor;
@@ -744,6 +766,22 @@
   0%, 16% { opacity: 0; transform: rotate(16deg) scale(1.04); }
   25%, 71% { opacity: 0.48; }
   84%, 100% { opacity: 0; transform: rotate(-42deg) scale(0.96); }
+}
+
+@keyframes hero-icon-forward {
+  0%, 10% { opacity: 0; transform: translate(-18px, 10px) rotate(-92deg) scale(0.28); }
+  18% { opacity: 0.76; transform: translate(0, 0) rotate(10deg) scale(1.18); }
+  23% { opacity: 0.66; transform: translate(0, -4px) rotate(-3deg) scale(0.9); }
+  29%, 62% { opacity: 0.56; transform: translate(0, 0) rotate(0) scale(1); }
+  72%, 100% { opacity: 0; transform: translate(16px, -12px) rotate(72deg) scale(0.38); }
+}
+
+@keyframes hero-icon-reverse {
+  0%, 14% { opacity: 0; transform: translate(18px, -12px) rotate(96deg) scale(0.32); }
+  22% { opacity: 0.7; transform: translate(0, 0) rotate(-12deg) scale(1.15); }
+  27% { opacity: 0.58; transform: translate(0, 4px) rotate(3deg) scale(0.88); }
+  34%, 67% { opacity: 0.5; transform: translate(0, 0) rotate(0) scale(1); }
+  78%, 100% { opacity: 0; transform: translate(-17px, 9px) rotate(-78deg) scale(0.36); }
 }
 
 
@@ -1147,7 +1185,8 @@
   .hero-tech-signal-one,
   .hero-tech-signal-two,
   .hero-tech-scan,
-  .hero-tech-arc {
+  .hero-tech-arc,
+  .hero-tech-icon {
     animation: none !important;
   }
 

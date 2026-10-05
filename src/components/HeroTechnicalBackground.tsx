@@ -10,6 +10,17 @@ type ArcFragment = {
   width?: number;
 };
 
+type TechIconName = "code" | "terminal" | "nodes" | "database" | "cube" | "brackets" | "bolt" | "layers";
+
+type TechIcon = {
+  name: TechIconName;
+  x: number;
+  y: number;
+  duration: number;
+  delay: number;
+  direction: "forward" | "reverse";
+};
+
 const ARC_FRAGMENTS: readonly ArcFragment[] = [
   { path: "M478 187 A456 221 0 0 1 755 96", direction: "cw", duration: 13.7, delay: -4.2 },
   { path: "M1110 104 A470 228 0 0 1 1328 227", direction: "ccw", duration: 17.3, delay: -11.6, width: 2 },
@@ -36,6 +47,38 @@ const ARC_FRAGMENTS: readonly ArcFragment[] = [
   { path: "M414 344 A476 230 0 0 1 444 414", direction: "cw", duration: 17.7, delay: -10.6, width: 1 },
   { path: "M1323 243 A458 221 0 0 1 1349 326", direction: "ccw", duration: 14.1, delay: -8.3 },
 ];
+
+const TECH_ICONS: readonly TechIcon[] = [
+  { name: "terminal", x: 392, y: 113, duration: 14.8, delay: -6.7, direction: "forward" },
+  { name: "nodes", x: 1418, y: 155, duration: 18.4, delay: -11.3, direction: "reverse" },
+  { name: "code", x: 306, y: 433, duration: 12.7, delay: -2.6, direction: "forward" },
+  { name: "database", x: 1451, y: 438, duration: 20.1, delay: -15.4, direction: "reverse" },
+  { name: "cube", x: 695, y: 71, duration: 16.2, delay: -9.9, direction: "forward" },
+  { name: "brackets", x: 1091, y: 548, duration: 13.9, delay: -4.1, direction: "reverse" },
+  { name: "bolt", x: 517, y: 328, duration: 17.6, delay: -12.8, direction: "forward" },
+  { name: "layers", x: 1235, y: 308, duration: 11.6, delay: -7.2, direction: "reverse" },
+];
+
+function TechGlyph({ name }: { name: TechIconName }) {
+  switch (name) {
+    case "terminal":
+      return <><rect x="-11" y="-8" width="22" height="16" rx="1" /><path d="M-7 -3 L-3 0 L-7 3 M0 4 H6" /></>;
+    case "nodes":
+      return <><path d="M-7 -5 L0 0 L7 -5 M0 0 V7" /><circle cx="-7" cy="-5" r="2" /><circle cx="7" cy="-5" r="2" /><circle cy="7" r="2" /></>;
+    case "code":
+      return <><path d="M-5 -7 L-10 0 L-5 7 M5 -7 L10 0 L5 7 M2 -10 L-2 10" /></>;
+    case "database":
+      return <><ellipse cy="-6" rx="9" ry="3" /><path d="M-9 -6 V6 C-9 10 9 10 9 6 V-6 M-9 0 C-9 4 9 4 9 0" /></>;
+    case "cube":
+      return <><path d="M0 -10 L9 -5 V5 L0 10 L-9 5 V-5 Z M-9 -5 L0 0 L9 -5 M0 0 V10" /></>;
+    case "brackets":
+      return <><path d="M-3 -9 H-9 V9 H-3 M3 -9 H9 V9 H3" /></>;
+    case "bolt":
+      return <path d="M2 -11 L-7 1 H-1 L-3 11 L8 -3 H2 Z" />;
+    case "layers":
+      return <><path d="M0 -10 L10 -5 L0 0 L-10 -5 Z M-10 0 L0 5 L10 0 M-10 5 L0 10 L10 5" /></>;
+  }
+}
 
 /** A quiet blueprint layer that frames the portrait, not the headline. */
 export default function HeroTechnicalBackground({
@@ -85,6 +128,19 @@ export default function HeroTechnicalBackground({
                   "--arc-width": arc.width ?? 1.5,
                 } as React.CSSProperties}
               />
+            ))}
+            {TECH_ICONS.map((icon, index) => (
+              <g key={`${icon.name}-${index}`} transform={`translate(${icon.x} ${icon.y})`}>
+                <g
+                  className={`hero-tech-icon hero-tech-icon--${icon.direction}`}
+                  style={{
+                    "--icon-duration": `${icon.duration}s`,
+                    "--icon-delay": `${icon.delay}s`,
+                  } as React.CSSProperties}
+                >
+                  <TechGlyph name={icon.name} />
+                </g>
+              </g>
             ))}
             <path className="hero-tech-scan" d="M478 110 A520 252 0 0 1 1265 117" />
             <circle className="hero-tech-orb hero-tech-orb-one" r="4">
