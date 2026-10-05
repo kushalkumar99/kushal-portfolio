@@ -594,6 +594,160 @@
 
 
 /* ================================================================
+   BLUEPRINT HALO — replaces the literal circuit-board motif with
+   portrait-led calibration geometry.
+   ================================================================ */
+
+.hero-tech-halos,
+.hero-tech-ticks,
+.hero-tech-crosshairs,
+.hero-tech-axes {
+  fill: none;
+  stroke: var(--text);
+  stroke-linecap: square;
+  vector-effect: non-scaling-stroke;
+}
+
+.hero-tech-halos {
+  stroke-width: 1px;
+  opacity: 0.1;
+}
+
+.hero-tech-halos ellipse:first-child {
+  stroke-dasharray: 2 12;
+}
+
+.hero-tech-halos ellipse:last-of-type {
+  stroke-dasharray: 1 7;
+  opacity: 0.75;
+}
+
+.hero-tech-ticks,
+.hero-tech-axes {
+  stroke-width: 1px;
+  opacity: 0.18;
+}
+
+.hero-tech-crosshairs {
+  stroke-width: 1.25px;
+  opacity: 0.28;
+}
+
+.hero-tech-crosshairs circle {
+  fill: var(--bg);
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+}
+
+.hero-tech-active {
+  color: var(--accent);
+}
+
+.hero-tech-arc {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: var(--arc-width, 1.5px);
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transform-box: view-box;
+  transform-origin: 875px 308px;
+  will-change: opacity, transform;
+}
+
+/* Each fragment has an intentionally different orbit, cadence and delay.
+   The non-repeating offsets feel random without relying on runtime randomness. */
+.hero-tech-arc--cw {
+  stroke-dasharray: 84 900;
+  animation: hero-arc-cw var(--arc-duration) var(--arc-delay) linear infinite;
+}
+
+.hero-tech-arc--ccw {
+  stroke-dasharray: 62 900;
+  animation: hero-arc-ccw var(--arc-duration) var(--arc-delay) linear infinite;
+}
+
+.hero-tech-scan {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+  stroke-dasharray: 3 240;
+  opacity: 0.72;
+  animation: hero-halo-scan 9s linear infinite;
+}
+
+.hero-tech-orb {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 3px rgb(49 91 239 / 45%));
+}
+
+.hero-tech-orb-two {
+  opacity: 0.65;
+}
+
+.hero-tech-label {
+  color: var(--text);
+  opacity: 0.28;
+}
+
+.hero-tech-label--north {
+  top: 11%;
+  left: 29%;
+}
+
+.hero-tech-label--east {
+  top: 32%;
+  right: 10%;
+}
+
+.hero-tech-label--south {
+  bottom: 10%;
+  left: 35%;
+}
+
+.hero-tech-status {
+  position: absolute;
+  top: 10%;
+  right: 6%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.08em;
+  opacity: 0.42;
+}
+
+.hero-tech-status span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgb(49 91 239 / 12%);
+}
+
+@keyframes hero-halo-scan {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -360; }
+}
+
+@keyframes hero-arc-cw {
+  0%, 12% { opacity: 0; transform: rotate(-10deg) scale(0.97); }
+  20%, 66% { opacity: 0.64; }
+  78%, 100% { opacity: 0; transform: rotate(38deg) scale(1.03); }
+}
+
+@keyframes hero-arc-ccw {
+  0%, 16% { opacity: 0; transform: rotate(16deg) scale(1.04); }
+  25%, 71% { opacity: 0.48; }
+  84%, 100% { opacity: 0; transform: rotate(-42deg) scale(0.96); }
+}
+
+
+/* ================================================================
    Z-INDEX STACK
 
    Background
@@ -772,6 +926,36 @@
 
   .hero-tech-signal {
     opacity: 0.32;
+  }
+
+  .hero-tech-halos {
+    opacity: 0.07;
+  }
+
+  .hero-tech-ticks,
+  .hero-tech-axes {
+    opacity: 0.12;
+  }
+
+  .hero-tech-label--north {
+    top: 10%;
+    left: 7%;
+  }
+
+  .hero-tech-label--east {
+    top: 36%;
+    right: 6%;
+  }
+
+  .hero-tech-label--south {
+    bottom: 13%;
+    left: 8%;
+  }
+
+  .hero-tech-status {
+    top: 8%;
+    right: 7%;
+    font-size: 8px;
   }
 
 
@@ -961,7 +1145,9 @@
   }
 
   .hero-tech-signal-one,
-  .hero-tech-signal-two {
+  .hero-tech-signal-two,
+  .hero-tech-scan,
+  .hero-tech-arc {
     animation: none !important;
   }
 
